@@ -848,9 +848,14 @@ unit will not work. It just means the cycle time would have to be 1.57ns
 in order for the sort unit to operate correctly. Because in this course
 we are primarily interested in design-space exploration (as opposed to
 meeting some kind of arbitrary timing constraint), we suggest adjusting
-the clock constraint until you end up with about 5-10% negative slack.
-This will result in a well-optimized design and help identify the
-"fundamental" performance of the design.
+the clock constraint until you end up with negative slack that is maybe
+10-20% of the clock constraint. This will result in a well-optimized
+design and help identify the "fundamental" performance of the design.
+Alternatively, if you are comparing multiple designs, sometimes the best
+situation is to tune the baseline so it has a couple of percent of
+negative slack and then ensure the alternative designs have similar cycle
+times. This will enable a fair comparison since all designs will be
+running at the same cycle time.
 
 The `report_area` command can show how much area each module uses and can
 enable detailed area breakdown analysis.
