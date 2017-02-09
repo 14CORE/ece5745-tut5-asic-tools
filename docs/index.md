@@ -235,7 +235,7 @@ Now let's look at the Verilog behavior specification for the 3-input
 NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/cells.cdl
+ % less -p NAND3X0 $STDCELLS_DIR/cells.v
  module NAND3X0 (IN1,IN2,IN3,QN);
 
  output  QN;
