@@ -5,6 +5,20 @@ ECE 5745 Tutorial 5: Synopsys ASIC Tools
  - Author: Christopher Batten
  - Date: February 1, 2017
 
+**Table of Contents**
+
+ - Introduction
+ - Synopsys Educational 90nm Standard-Cell Libraries
+ - PyMTL-Based Testing, Simulation, Translation
+ - Using Synopsys Design Compiler for Synthesis
+ - Using Synopsys IC Compiler for Place-and-Route
+ - Using Synopsys PrimeTime for Power Analysis
+ - Using Verilog RTL Models
+ - On Your Own
+
+Introduction
+--------------------------------------------------------------------------
+
 This tutorial will discuss the various views that make-up a standard-cell
 library and then illustrate how to use a set of Synopsys ASIC tools to
 map an RTL design down to these standard cells and ultimately silicon.
@@ -15,20 +29,6 @@ better understanding of the detailed steps involved in this process. The
 next tutorial will illustrate how this process can be automated to
 facilitate rapid design-space exploration. This tutorial assumes you have
 already completed the tutorials on Linux, Git, PyMTL, and Verilog.
-
-**Table of Contents**
-
- - Overview of ECE 5745 ASIC Tools
- - Synopsys Educational 90nm Standard-Cell Libraries
- - PyMTL-Based Testing, Simulation, Translation
- - Using Synopsys Design Compiler for Synthesis
- - Using Synopsys IC Compiler for Place-and-Route
- - Using Synopsys PrimeTime for Power Analysis
- - Using Verilog RTL Models
- - On Your Own
-
-Overview of Synopsys ASIC Tools
---------------------------------------------------------------------------
 
 The following diagram illustrates the four primary tools we will be using
 in ECE 5745 along with a few smaller secondary tools. Notice that the
