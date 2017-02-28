@@ -96,8 +96,9 @@ available to you on the [public course
 webpage](http://www.csl.cornell.edu/courses/ece5745/syndocs). The
 username/password was distributed during lecture.
 
-You should start by cloning the tutorial repository from GitHub. Access
-an `ecelinux` machine and use the following commands:
+The first step is to source the setup script, clone this repository from
+GitHub, and define an environment variable to keep track of the top
+directory for the project.
 
 ```
  % source setup-ece5745.sh
@@ -1389,8 +1390,10 @@ modules in the layout using the following steps:
  - Click _OK_ in the pop up
 
 We call the resulting plot an "amoeba plot" because the tool often
-generates blocks that look like amoebas. The following screen capture
-shows the amoeba plot for the sort unit.
+generates blocks that look like amoebas. You can also choose _Color
+Specific Hierarchical Cells" to select various modules at different
+levels of the hierarchy to highlight. The following screen capture shows
+the amoeba plot for the sort unit.
 
 ![](assets/fig/synopsys-icc-8.png)
 
