@@ -363,7 +363,7 @@ information about area, leakage power, capacitance of each input pin,
 internal power, logical functionality, and timing. Units for all data is
 provided at the top of the `.lib` file. In this snippet you can see that
 the area of the cell is 7.4 square micron and the leakage power is 9.2uW.
-The capacitance for the input pin `IN`` is 2.1fF, although there is
+The capacitance for the input pin `IN` is 2.1fF, although there is
 additional data that capture how the capacitance changes depending on
 whether the input is rising or falling. The output pin `QN` implements
 the logic equation `(IN3*IN2*IN1)` (i.e., a NAND). Data within the `.lib`
@@ -1391,7 +1391,7 @@ modules in the layout using the following steps:
 
 We call the resulting plot an "amoeba plot" because the tool often
 generates blocks that look like amoebas. You can also choose _Color
-Specific Hierarchical Cells" to select various modules at different
+Specific Hierarchical Cells_ to select various modules at different
 levels of the hierarchy to highlight. The following screen capture shows
 the amoeba plot for the sort unit.
 
