@@ -69,13 +69,13 @@ library.
     same abstract logical and timing views used in Synopsys DC, but we in
     addition we need to provide Synopsys ICC with technology information
     in `.tf` and `.tluplus` format and abstract physical views of the
-    standard-cell library in `.fr` (Milkyway database) format.w Synopsys
-    ICC will generate an updated Verilog gate-level netlist, a `.sbpf`
-    file which contains parasitic resistance/capacitance information
-    about all nets in the design, and a `.gds` file which contains the
-    final layout. The `.gds` file can be inspected using the open-source
-    Klayout GDS viewer. Synopsys ICC also generates reports which can be
-    used to accurately characterize area and timing.
+    standard-cell library in `.mwlib` (Milkyway database) format.w
+    Synopsys ICC will generate an updated Verilog gate-level netlist, a
+    `.sbpf` file which contains parasitic resistance/capacitance
+    information about all nets in the design, and a `.gds` file which
+    contains the final layout. The `.gds` file can be inspected using the
+    open-source Klayout GDS viewer. Synopsys ICC also generates reports
+    which can be used to accurately characterize area and timing.
 
  4. We use Synopsys PrimeTime (PT) to perform power-analysis of our
     design. We need to provide Synopsys PT with the same abstract
@@ -144,7 +144,7 @@ thousands of files. For example, here is the distribution for the SAED
 standard-cell library.
 
 ```
- % cd $STDCELLS_DIR/dist
+ % cd $ADK_PKGS/saed-90nm/pkgs/synopsys-kits-2011-0125
 ```
 
 To simplify using the SAED standard-cell library in this course, we have
@@ -155,31 +155,33 @@ symlinks.
 ```
  % cd $STDCELLS_DIR
  % ls
- cells.cdl          # circuit schematics for each cell
- cells.gds          # layout for each cell
- cells.v            # behavioral specification for each cell
+ stdcells.cdl       # circuit schematics for each cell
+ stdcells.gds       # layout for each cell
+ stdcells.v         # behavioral specification for each cell
 
- cells.sp           # schematics with extracted parasitics for each cell
- cells.lib          # abstract logical, timing, power view for each cell
- cells.lef          # abstract physical view for each cell
+ stdcells.sp        # schematics with extracted parasitics for each cell
+ stdcells.lib       # abstract logical, timing, power view for each cell
+ sdtcells.lef       # abstract physical view for each cell
 
- cells.tf           # interconnect technology information
- cells-tech.lef     # interconnect technology information
- cells-max.tluplus  # interconnect parasitic resistance/capacitance
- cells-min.tluplus  # interconnect parasitic resistance/capacitance
+ stdcells.db        # binary compiled version of .lib file
+ stdcells.mwlib     # Milkyway database built from .lef file
 
- cells.db           # binary compiled version of .lib file
- cells.fr           # Milkyway database built from .lef file
+ stdcells.pdf       # standard-cell library databook
 
- cells.pdf          # standard-cell library databook
- cells.lyp          # layer settings for Klayout
+ rtk-tech.tf        # interconnect technology information
+ rtk-tech.lef       # interconnect technology information
+ rtk-max.tluplus    # interconnect parasitic resistance/capacitance
+ rtk-min.tluplus    # interconnect parasitic resistance/capacitance
+ rtk-tluplus.map    # layer mapping file
+
+ klayout.lyp        # layer settings for Klayout
 ```
 
 Let's begin by looking at the schematic for a 3-input NAND cell
 (NAND3X0).
 
 ```
- % less -p NAND3X0 cells.cdl
+ % less -p NAND3X0 stdcells.cdl
  .subckt NAND3X0 IN1 IN2 IN3 QN VDD VSS
  mmn2 net1 IN2 net2 VSS n12 l = 0.1u w = 0.52u m = 1
  mmn3 net2 IN3 VSS  VSS n12 l = 0.1u w = 0.52u m = 1
@@ -203,7 +205,7 @@ Now let's look at the layout for the 3-input NAND cell using the
 open-source Klayout GDS viewer.
 
 ```
- % klayout -l $STDCELLS_DIR/cells.lyp $STDCELLS_DIR/cells.gds
+ % klayout -l $STDCELLS_DIR/klayout.lyp $STDCELLS_DIR/stdcells.gds
 ```
 
 Note that we are using the `.lyp` file which is a predefined layer color
@@ -236,7 +238,7 @@ Now let's look at the Verilog behavior specification for the 3-input
 NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/cells.v
+ % less -p NAND3X0 $STDCELLS_DIR/stdcells.v
  module NAND3X0 (IN1,IN2,IN3,QN);
 
  output  QN;
@@ -271,7 +273,7 @@ for experimenting with the circuit timing and power. Let's look at a
 snippet of the extracted circuit for the 3-input NAND cell:
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/cells.sp
+ % less -p NAND3X0 $STDCELLS_DIR/stdcells.sp
  .SUBCKT NAND3X0 VSS VDD IN3 IN1 IN2 QN
  ...
  Cg1 M6:DRN 0 1.83492e-17
@@ -301,7 +303,7 @@ simulations to create characterization data stored in a `.lib` (Liberty)
 file. Let's look at snippet of the `.lib` file for the 3-input NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/cells.lib
+ % less -p NAND3X0 $STDCELLS_DIR/stdcells.lib
  cell (NAND3X0) {
   cell_footprint : "nand3x0 ";
   area : 7.3728 ;
@@ -415,7 +417,7 @@ cell suitable for use by the ASIC tools. These tools create `.lef` files.
 Let's look at snippet of the the `.lef` file for the 3-input NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/cells.lef
+ % less -p NAND3X0 $STDCELLS_DIR/stdcells.lef
  MACRO NAND3X0
   CLASS CORE ;
   ORIGIN 0 0 ;
@@ -475,11 +477,12 @@ If you compare the `.lef` to the `.gds` you can see that the `.lef` is a
 much simpler representation that only captures the boundary, pins, and
 obstructions. The ASIC tools actually do not use the `.lef` file
 directly, but instead use a pre-generated database version of the `.lef`
-file stored in `.fr` (Milkyway) format.
+file stored in `.mwlib` (Milkyway) format.
 
-The standard-cell library also includes several files (e.g., `.tf`,
-`-tech.lef`, `.tluplus`) that capture information about the metal
-interconnect including the wire width/pitch and parasitics.
+The standard-cell library also includes several files (e.g.,
+`rtk-tech.tf`, `rtk-tech.lef`, `rtk-max.tluplus`, `rtk-min.tluplus`,
+`rtk-tluplus.map`) that capture information about the metal interconnect
+including the wire width/pitch and parasitics.
 
 Finally, a standard-cell library will always include a databook, which is
 a document that describes the details of every cell in the library. Take
@@ -635,8 +638,8 @@ should also search all cells inside the design itself when resolving
 references.
 
 ```
- dc_shell> set_app_var target_library "$env(STDCELLS_DIR)/cells.db"
- dc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/cells.db"
+ dc_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
+ dc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
 ```
 
 Note that we can use `$env(STDCELLS_DIR)` to get access to the
@@ -948,8 +951,8 @@ generally analyzing our design. Start Synopsys DV and setup the
 
 ```
  % design_vision-xg
- design_vision> set_app_var target_library "$env(STDCELLS_DIR)/cells.db"
- design_vision> set_app_var link_library   "* $env(STDCELLS_DIR)/cells.db"
+ design_vision> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
+ design_vision> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
 ```
 
 You can use the following steps to open the `.ddc` file generated during
@@ -1021,8 +1024,8 @@ We begin by setting the `target_library` and `link_library` variables as
 before.
 
 ```
- icc_shell> set_app_var target_library "$env(STDCELLS_DIR)/cells.db"
- icc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/cells.db"
+ icc_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
+ icc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
 ```
 
 ASIC tools need to manipulate increasingly large amounts of design data
@@ -1031,13 +1034,13 @@ databases for storing and manipulating design data and metadata. Synopsys
 ASIC tools use their own Milkyway database format. Synopsys ICC requires
 us to create a new Milkway database for this design. The `create_mw_lib`
 command initializes such a database with information about the
-interconnect technology (`cells.tf` file) and the abstract physical views
-of the standard-cell library (`cells.fr` file).
+interconnect technology (`rtk-tech.tf` file) and the abstract physical
+views of the standard-cell library (`stdcells.mwlib` file).
 
 ```
  icc_shell> create_mw_lib -open \
-    -tech                 "$env(STDCELLS_DIR)/cells.tf" \
-    -mw_reference_library "$env(STDCELLS_DIR)/cells.fr" \
+    -tech                 "$env(STDCELLS_DIR)/rtk-tech.tf" \
+    -mw_reference_library "$env(STDCELLS_DIR)/stdcells.mwlib" \
     "LIB"
 ```
 
@@ -1048,9 +1051,9 @@ Synopsys ICC to the `.tluplus` files.
 
 ```
  icc_shell> set_tlu_plus_files \
-    -max_tluplus  "$env(STDCELLS_DIR)/cells-max.tluplus" \
-    -min_tluplus  "$env(STDCELLS_DIR)/cells-min.tluplus" \
-    -tech2itf_map "$env(STDCELLS_DIR)/tech2itf.map"
+    -max_tluplus  "$env(STDCELLS_DIR)/rtk-max.tluplus" \
+    -min_tluplus  "$env(STDCELLS_DIR)/rtk-min.tluplus" \
+    -tech2itf_map "$env(STDCELLS_DIR)/rtk-tluplus.map"
 ```
 
 We are now ready to import the gate-level Verilog netlist synthesized by
@@ -1103,7 +1106,7 @@ we personally like better by using the following steps:
 
  - Ensure the _View Settings Toolbar_ is visible by choosing _View > Toolbars > View
 Settings_ from the menu
- - Use  the drop-down list next to _Preset_ to choose _ece5745_
+ - Use the drop-down list next to _Preset_ to choose _ece5745_
 
 Now that the cells are placed in the floorplan, the next step is power
 routing. Recall that each standard cell has internal M1 power and ground
@@ -1237,7 +1240,7 @@ streaming out the complete design including all of the instantiated
 standard cells.
 
 ```
- icc_shell> read_stream  -format gds "$env(STDCELLS_DIR)/cells.gds"
+ icc_shell> read_stream  -format gds "$env(STDCELLS_DIR)/stdcells.gds"
  icc_shell> write_stream -format gds post-par.gds
 ```
 
@@ -1423,7 +1426,7 @@ open-source Klayout GDS viewer.
 
 ```
  % cd $TOPDIR/asic/icc-par
- % klayout -l $STDCELLS_DIR/cells.lyp post-par.gds
+ % klayout -l $STDCELLS_DIR/klayout.lyp post-par.gds
 ```
 
 The following screen capture illutrates using Klayout to view the layout
@@ -1501,8 +1504,8 @@ We begin by setting the `target_library` and `link_library` variables as
 before.
 
 ```
- pt_shell> set_app_var target_library "$env(STDCELLS_DIR)/cells.db"
- pt_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/cells.db"
+ pt_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
+ pt_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
 ```
 
 Since Synopsys PT is primarily used for static timing analysis, we need
