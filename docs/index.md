@@ -1106,7 +1106,7 @@ we personally like better by using the following steps:
 
  - Ensure the _View Settings Toolbar_ is visible by choosing _View > Toolbars > View
 Settings_ from the menu
- - Use the drop-down list next to _Preset_ to choose _ece5745_
+ - Use the drop-down list next to _Preset_ to choose _saed-90nm_
 
 Now that the cells are placed in the floorplan, the next step is power
 routing. Recall that each standard cell has internal M1 power and ground
