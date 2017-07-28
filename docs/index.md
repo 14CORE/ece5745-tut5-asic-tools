@@ -153,7 +153,7 @@ we want to use in this course. Here is the directory which contains these
 symlinks.
 
 ```
- % cd $STDCELLS_DIR
+ % cd $ECE5745_STDCELLS
  % ls
  stdcells.cdl       # circuit schematics for each cell
  stdcells.gds       # layout for each cell
@@ -205,7 +205,7 @@ Now let's look at the layout for the 3-input NAND cell using the
 open-source Klayout GDS viewer.
 
 ```
- % klayout -l $STDCELLS_DIR/klayout.lyp $STDCELLS_DIR/stdcells.gds
+ % klayout -l $ECE5745_STDCELLS/klayout.lyp $ECE5745_STDCELLS/stdcells.gds
 ```
 
 Note that we are using the `.lyp` file which is a predefined layer color
@@ -238,7 +238,7 @@ Now let's look at the Verilog behavior specification for the 3-input
 NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/stdcells.v
+ % less -p NAND3X0 $ECE5745_STDCELLS/stdcells.v
  module NAND3X0 (IN1,IN2,IN3,QN);
 
  output  QN;
@@ -273,7 +273,7 @@ for experimenting with the circuit timing and power. Let's look at a
 snippet of the extracted circuit for the 3-input NAND cell:
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/stdcells.sp
+ % less -p NAND3X0 $ECE5745_STDCELLS/stdcells.sp
  .SUBCKT NAND3X0 VSS VDD IN3 IN1 IN2 QN
  ...
  Cg1 M6:DRN 0 1.83492e-17
@@ -303,7 +303,7 @@ simulations to create characterization data stored in a `.lib` (Liberty)
 file. Let's look at snippet of the `.lib` file for the 3-input NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/stdcells.lib
+ % less -p NAND3X0 $ECE5745_STDCELLS/stdcells.lib
  cell (NAND3X0) {
   cell_footprint : "nand3x0 ";
   area : 7.3728 ;
@@ -417,7 +417,7 @@ cell suitable for use by the ASIC tools. These tools create `.lef` files.
 Let's look at snippet of the the `.lef` file for the 3-input NAND cell.
 
 ```
- % less -p NAND3X0 $STDCELLS_DIR/stdcells.lef
+ % less -p NAND3X0 $ECE5745_STDCELLS/stdcells.lef
  MACRO NAND3X0
   CLASS CORE ;
   ORIGIN 0 0 ;
@@ -638,12 +638,12 @@ should also search all cells inside the design itself when resolving
 references.
 
 ```
- dc_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
- dc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
+ dc_shell> set_app_var target_library "$env(ECE5745_STDCELLS)/stdcells.db"
+ dc_shell> set_app_var link_library   "* $env(ECE5745_STDCELLS)/stdcells.db"
 ```
 
-Note that we can use `$env(STDCELLS_DIR)` to get access to the
-`$STDCELLS_DIR` environment variable which specifies the directory
+Note that we can use `$env(ECE5745_STDCELLS)` to get access to the
+`$ECE5745_STDCELLS` environment variable which specifies the directory
 containing the standard cells, and that we are referencing the abstract
 logical and timing views in the `.db` format.
 
@@ -951,8 +951,8 @@ generally analyzing our design. Start Synopsys DV and setup the
 
 ```
  % design_vision-xg
- design_vision> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
- design_vision> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
+ design_vision> set_app_var target_library "$env(ECE5745_STDCELLS)/stdcells.db"
+ design_vision> set_app_var link_library   "* $env(ECE5745_STDCELLS)/stdcells.db"
 ```
 
 You can use the following steps to open the `.ddc` file generated during
@@ -1024,8 +1024,8 @@ We begin by setting the `target_library` and `link_library` variables as
 before.
 
 ```
- icc_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
- icc_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
+ icc_shell> set_app_var target_library "$env(ECE5745_STDCELLS)/stdcells.db"
+ icc_shell> set_app_var link_library   "* $env(ECE5745_STDCELLS)/stdcells.db"
 ```
 
 ASIC tools need to manipulate increasingly large amounts of design data
@@ -1039,8 +1039,8 @@ views of the standard-cell library (`stdcells.mwlib` file).
 
 ```
  icc_shell> create_mw_lib -open \
-    -tech                 "$env(STDCELLS_DIR)/rtk-tech.tf" \
-    -mw_reference_library "$env(STDCELLS_DIR)/stdcells.mwlib" \
+    -tech                 "$env(ECE5745_STDCELLS)/rtk-tech.tf" \
+    -mw_reference_library "$env(ECE5745_STDCELLS)/stdcells.mwlib" \
     "LIB"
 ```
 
@@ -1051,9 +1051,9 @@ Synopsys ICC to the `.tluplus` files.
 
 ```
  icc_shell> set_tlu_plus_files \
-    -max_tluplus  "$env(STDCELLS_DIR)/rtk-max.tluplus" \
-    -min_tluplus  "$env(STDCELLS_DIR)/rtk-min.tluplus" \
-    -tech2itf_map "$env(STDCELLS_DIR)/rtk-tluplus.map"
+    -max_tluplus  "$env(ECE5745_STDCELLS)/rtk-max.tluplus" \
+    -min_tluplus  "$env(ECE5745_STDCELLS)/rtk-min.tluplus" \
+    -tech2itf_map "$env(ECE5745_STDCELLS)/rtk-tluplus.map"
 ```
 
 We are now ready to import the gate-level Verilog netlist synthesized by
@@ -1240,7 +1240,7 @@ streaming out the complete design including all of the instantiated
 standard cells.
 
 ```
- icc_shell> read_stream  -format gds "$env(STDCELLS_DIR)/stdcells.gds"
+ icc_shell> read_stream  -format gds "$env(ECE5745_STDCELLS)/stdcells.gds"
  icc_shell> write_stream -format gds post-par.gds
 ```
 
@@ -1426,7 +1426,7 @@ open-source Klayout GDS viewer.
 
 ```
  % cd $TOPDIR/asic/icc-par
- % klayout -l $STDCELLS_DIR/klayout.lyp post-par.gds
+ % klayout -l $ECE5745_STDCELLS/klayout.lyp post-par.gds
 ```
 
 The following screen capture illutrates using Klayout to view the layout
@@ -1504,8 +1504,8 @@ We begin by setting the `target_library` and `link_library` variables as
 before.
 
 ```
- pt_shell> set_app_var target_library "$env(STDCELLS_DIR)/stdcells.db"
- pt_shell> set_app_var link_library   "* $env(STDCELLS_DIR)/stdcells.db"
+ pt_shell> set_app_var target_library "$env(ECE5745_STDCELLS)/stdcells.db"
+ pt_shell> set_app_var link_library   "* $env(ECE5745_STDCELLS)/stdcells.db"
 ```
 
 Since Synopsys PT is primarily used for static timing analysis, we need
